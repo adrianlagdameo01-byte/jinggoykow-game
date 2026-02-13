@@ -58,6 +58,8 @@ canvas#spaceBG, canvas#fireworksCanvas {
 
 #score{ font-size:18px; margin-top:10px; }
 
+#catchMessage { font-size:18px; margin-top:10px; opacity:1; transition: opacity 1.5s ease; }
+
 #gameOver,#finalScreen,#finalLine{ display:none; position:absolute; top:30%; width:100%; }
 
  
@@ -104,7 +106,7 @@ button{ padding:12px 20px; font-size:14px; border:none; border-radius:25px; marg
 
 <h1>Operation Steal Jinggoykow's Heart 💘</h1>
 
-<p>Catch 14 hearts to win 😌</p>
+<p id="catchMessage">Catch 14 hearts to win 😌</p>
 
 <div id="score">Hearts: 0</div>
 
@@ -198,11 +200,7 @@ const planets=[
 
 let shootingStars=[];
 
-for(let i=0;i<3;i++){ // fewer shooting stars
-
-    shootingStars.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,length:100,speed:Math.random()*6+2,active:false});
-
-}
+for(let i=0;i<3;i++){ shootingStars.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,length:100,speed:Math.random()*6+2,active:false}); }
 
  
 
@@ -320,11 +318,29 @@ function createHeart(){
 
     heart.onclick=function(){
 
-        score++; document.getElementById("score").innerText="Hearts: "+score;
+        score++;
+
+        document.getElementById("score").innerText="Hearts: "+score;
+
+ 
+
+        // fade out catch message if score >=14
+
+        if(score>=14){
+
+            const msg = document.getElementById("catchMessage");
+
+            msg.style.opacity = 0; // fade out
+
+            setTimeout(()=>{ msg.style.display = "none"; }, 1500); // remove after transition
+
+            endGame();
+
+        }
+
+ 
 
         heart.remove();
-
-        if(score>=14) endGame();
 
     };
 
@@ -348,9 +364,25 @@ function createHeart(){
 
 // game over
 
-function showGameOver(){ score=0; heartsMissed=0; document.getElementById("score").innerText="Hearts: 0"; gameStopped=true; document.getElementById("gameOver").style.display="block"; }
+function showGameOver(){
 
-function continueGame(){ gameStopped=false; document.getElementById("gameOver").style.display="none"; }
+    score=0; heartsMissed=0;
+
+    document.getElementById("score").innerText="Hearts: 0";
+
+    gameStopped=true;
+
+    document.getElementById("gameOver").style.display="block";
+
+}
+
+function continueGame(){
+
+    gameStopped=false;
+
+    document.getElementById("gameOver").style.display="none";
+
+}
 
  
 
@@ -366,11 +398,15 @@ function endGame(){
 
     lines.forEach((line,i)=>{ setTimeout(()=>{ line.style.opacity=1; line.classList.add("glow"); }, delay*(i+1)); });
 
-    setTimeout(()=>{ document.getElementById("yesBtn").style.display="inline-block";
+    setTimeout(()=>{
 
-                     const noBtn = document.getElementById("noBtn");
+        document.getElementById("yesBtn").style.display="inline-block";
 
-                     noBtn.style.display="inline-block"; }, delay*(lines.length+1));
+        const noBtn = document.getElementById("noBtn");
+
+        noBtn.style.display="inline-block";
+
+    }, delay*(lines.length+1));
 
 }
 
