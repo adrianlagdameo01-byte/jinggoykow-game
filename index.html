@@ -36,7 +36,29 @@ canvas#spaceBG, canvas#fireworksCanvas {
 
  
 
-.line { opacity: 0; transition: opacity 3s ease; font-size: 1.2em; }
+.line {
+
+    opacity: 0;
+
+    transition: opacity 3s ease;
+
+    font-size: 1.2em;
+
+}
+
+ 
+
+.line1 { color: pink; }
+
+.line2 { color: hotpink; }
+
+.line3 { color: yellow; }
+
+.line4 { color: lightblue; }
+
+.line5 { color: lightgreen; }
+
+ 
 
 .glow { text-shadow:0 0 15px pink,0 0 25px hotpink,0 0 35px red; }
 
@@ -60,11 +82,61 @@ canvas#spaceBG, canvas#fireworksCanvas {
 
 #catchMessage { font-size:18px; margin-top:10px; opacity:1; transition: opacity 1.5s ease; }
 
-#gameOver,#finalScreen,#finalLine{ display:none; position:absolute; top:30%; width:100%; }
+ 
+
+#gameOver,#finalScreen,#finalLine,#winBox{ display:none; position:absolute; width:100%; text-align:center; }
 
  
 
-button{ padding:12px 20px; font-size:14px; border:none; border-radius:25px; margin:10px; cursor:pointer; font-family: 'Press Start 2P', cursive; }
+#gameOver { top:55%; }
+
+#gameOverBox {
+
+    display:inline-block;
+
+    background:black;
+
+    border:2px solid hotpink;
+
+    padding:20px 30px;
+
+    border-radius:15px;
+
+}
+
+ 
+
+#winBox {
+
+    display:inline-block;
+
+    background:black;
+
+    border:2px solid pink;
+
+    padding:20px 30px;
+
+    border-radius:15px;
+
+    font-size:1.2em;
+
+    color:white;
+
+    top:50%;
+
+    left:50%;
+
+    transform:translate(-50%, -50%);
+
+}
+
+ 
+
+button{
+
+    padding:12px 20px; font-size:14px; border:none; border-radius:25px; margin:10px; cursor:pointer; font-family: 'Press Start 2P', cursive;
+
+}
 
 #yesBtn{ background:white; color:hotpink; }
 
@@ -122,13 +194,21 @@ button{ padding:12px 20px; font-size:14px; border:none; border-radius:25px; marg
 
 <div id="gameOver">
 
-    <h2>💔 GAME OVER 💔</h2>
+    <div id="gameOverBox">
 
-    <p>You missed too many hearts...</p>
+        <h2>💔 GAME OVER 💔</h2>
 
-    <button onclick="continueGame()">Try Again</button>
+        <p>You missed too many hearts...</p>
+
+        <button onclick="continueGame()">Try Again</button>
+
+    </div>
 
 </div>
+
+ 
+
+<div id="winBox">🎉 Great Job your Highness! 🎉</div>
 
  
 
@@ -136,15 +216,15 @@ button{ padding:12px 20px; font-size:14px; border:none; border-radius:25px; marg
 
     <div id="message">
 
-        <div class="line">Jinggoykow…</div>
+        <div class="line line1">Jinggoykow…</div>
 
-        <div class="line">You caught the hearts ❤️</div>
+        <div class="line line2">You caught the hearts ❤️</div>
 
-        <div class="line">But honestly?</div>
+        <div class="line line3">But honestly?</div>
 
-        <div class="line">You already had mine from the beginning.</div>
+        <div class="line line4">You already had mine from the beginning.</div>
 
-        <div class="line">Do I have yours too? 💖</div>
+        <div class="line line5">Do I have yours too? 💖</div>
 
     </div>
 
@@ -324,9 +404,9 @@ function createHeart(){
 
  
 
-        // fade out catch message and score if score >=14
+        if(score>=14 && !gameWon){
 
-        if(score>=14){
+            // hide score and catch message
 
             const msg = document.getElementById("catchMessage");
 
@@ -341,6 +421,8 @@ function createHeart(){
                 msg.style.display = "none";
 
                 sc.style.display = "none";
+
+                document.getElementById("winBox").style.display="block"; // show win message
 
             }, 1500);
 
@@ -460,15 +542,11 @@ function moveNoButtonRandomly(){
 
     noBtn.style.top = Math.random()*80 + "vh";
 
-    setTimeout(moveNoButtonRandomly, 700); // change position every 0.7s
+    setTimeout(moveNoButtonRandomly, 700);
 
 }
 
 moveNoButtonRandomly();
-
- 
-
-// also move on hover/touch
 
 noBtn.addEventListener("mouseover", moveNoButtonRandomly);
 
