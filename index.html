@@ -78,23 +78,25 @@ canvas#spaceBG, canvas#fireworksCanvas {
 
  
 
-#score{ font-size:18px; margin-top:10px; opacity:1; transition: opacity 1.5s ease; }
-
-#catchMessage { font-size:18px; margin-top:10px; opacity:1; transition: opacity 1.5s ease; }
+#score, #catchMessage{ font-size:18px; margin-top:10px; opacity:1; transition: opacity 1.5s ease; }
 
  
 
-#gameOver,#finalScreen,#finalLine,#winBox{ display:none; position:absolute; width:100%; text-align:center; }
+#gameOver,#finalScreen,#finalLine,#winBox{ display:none; width:100%; text-align:center; }
 
  
 
-#gameOver { top:55%; }
+#gameOver {
+
+    position:fixed; bottom:20%; width:100%;
+
+}
 
 #gameOverBox {
 
     display:inline-block;
 
-    background:black;
+    background:#111; /* dark box */
 
     border:2px solid hotpink;
 
@@ -250,7 +252,7 @@ button{
 
 <script>
 
-// 🌌 Space background
+// Space background setup
 
 const canvas = document.getElementById('spaceBG');
 
@@ -412,43 +414,35 @@ function createHeart(){
 
         if(score>=14 && !gameWon){
 
-            // hide score and catch message
-
             const msg = document.getElementById("catchMessage");
 
             const sc = document.getElementById("score");
 
-            msg.style.opacity = 0;
-
-            sc.style.opacity = 0;
+            msg.style.opacity = 0; sc.style.opacity = 0;
 
             setTimeout(()=>{
 
-                msg.style.display = "none";
-
-                sc.style.display = "none";
+                msg.style.display = "none"; sc.style.display = "none";
 
  
 
-                // show the "Great Job" message at bottom for 3 seconds
+                // show "Great Job your Highness!" for 3 seconds
 
                 const winBox = document.getElementById("winBox");
 
                 winBox.style.display = "block";
 
-                setTimeout(()=>{ winBox.style.opacity = 1; }, 50);
+                setTimeout(()=>{ winBox.style.opacity = 1; },50);
 
                 setTimeout(()=>{
 
                     winBox.style.opacity = 0;
 
-                    setTimeout(()=>{ winBox.style.display="none"; }, 500);
+                    setTimeout(()=>{ winBox.style.display="none"; },500);
 
-                }, 3000);
+                },3000);
 
- 
-
-            }, 1500);
+            },1500);
 
  
 
@@ -560,25 +554,23 @@ function yesClicked(){
 
  
 
-// NO button floats randomly continuously
+// NO button runs away only when hovered or clicked
 
 const noBtn=document.getElementById("noBtn");
 
-function moveNoButtonRandomly(){
+function moveNoButton(){
 
     noBtn.style.left = Math.random()*80 + "vw";
 
     noBtn.style.top = Math.random()*80 + "vh";
 
-    setTimeout(moveNoButtonRandomly, 700);
-
 }
 
-moveNoButtonRandomly();
+noBtn.addEventListener("mouseover", moveNoButton);
 
-noBtn.addEventListener("mouseover", moveNoButtonRandomly);
+noBtn.addEventListener("click", moveNoButton);
 
-noBtn.addEventListener("touchstart", moveNoButtonRandomly);
+noBtn.addEventListener("touchstart", moveNoButton);
 
  
 
