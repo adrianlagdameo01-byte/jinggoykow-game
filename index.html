@@ -56,11 +56,11 @@ z-index:-3;
 
 .sparkle{
 
-position:absolute;
+position:fixed;
 
-width:6px;
+width:8px;
 
-height:6px;
+height:8px;
 
 border-radius:50%;
 
@@ -70,7 +70,7 @@ pointer-events:none;
 
 animation:sparkleExplode 0.8s ease-out forwards;
 
-box-shadow:0 0 10px hotpink,0 0 20px deeppink;
+box-shadow:0 0 10px hotpink,0 0 20px deeppink,0 0 30px pink;
 
 }
 
@@ -98,8 +98,6 @@ box-shadow:0 0 10px hotpink,0 0 20px deeppink;
 
 .line5{color:lightgreen;}
 
- 
-
 .glow{text-shadow:0 0 15px pink,0 0 25px hotpink,0 0 35px red;}
 
  
@@ -122,7 +120,15 @@ filter:drop-shadow(0 0 10px #ff69b4) drop-shadow(0 0 20px #ff1493);
 
  
 
-#gameOver,#finalScreen,#finalLine,#winBox{display:none;width:100%;text-align:center;}
+#gameOver,#finalScreen,#finalLine,#winBox{
+
+display:none;
+
+width:100%;
+
+text-align:center;
+
+}
 
  
 
@@ -252,8 +258,6 @@ top:70%;
 
  
 
-<!-- Background Music -->
-
 <audio id="bgMusic" loop>
 
 <source src=https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3 type="audio/mpeg">
@@ -261,8 +265,6 @@ top:70%;
 </audio>
 
  
-
-<!-- POP SOUND -->
 
 <audio id="popSound">
 
@@ -326,11 +328,7 @@ top:70%;
 
  
 
-/* ===============================
-
-   GAME VARIABLES
-
-=================================*/
+/* ================= GAME VARIABLES ================= */
 
  
 
@@ -352,11 +350,7 @@ music.play().catch(()=>{});
 
  
 
-/* ===============================
-
-   HEART CREATION
-
-=================================*/
+/* ================= HEART CREATION ================= */
 
  
 
@@ -404,9 +398,21 @@ popSound.play().catch(()=>{});
 
  
 
-// ✨ SPARKLE EXPLOSION
+// 💥 GET REAL POSITION
 
-let sparkleCount = (score+1>=14)?40:12;
+const rect=heart.getBoundingClientRect();
+
+const centerX=rect.left+rect.width/2;
+
+const centerY=rect.top+rect.height/2;
+
+ 
+
+// ✨ SPARKLES
+
+let sparkleCount=(score+1>=14)?40:14;
+
+let spread=(score+1>=14)?350:150;
 
  
 
@@ -416,15 +422,15 @@ const sparkle=document.createElement("div");
 
 sparkle.className="sparkle";
 
-sparkle.style.left=heart.offsetLeft+"px";
+sparkle.style.left=centerX+"px";
 
-sparkle.style.top=heart.offsetTop+"px";
+sparkle.style.top=centerY+"px";
 
  
 
-const xMove=(Math.random()-0.5)*(score+1>=14?400:150)+"px";
+const xMove=(Math.random()-0.5)*spread+"px";
 
-const yMove=(Math.random()-0.5)*(score+1>=14?400:150)+"px";
+const yMove=(Math.random()-0.5)*spread+"px";
 
  
 
@@ -456,11 +462,13 @@ document.getElementById("catchMessage").style.display="none";
 
 document.getElementById("score").style.display="none";
 
-document.getElementById("winBox").style.display="block";
+const winBox=document.getElementById("winBox");
 
-setTimeout(()=>{document.getElementById("winBox").style.opacity=1;},50);
+winBox.style.display="block";
 
-setTimeout(()=>{document.getElementById("winBox").style.opacity=0;},3000);
+setTimeout(()=>{winBox.style.opacity=1;},50);
+
+setTimeout(()=>{winBox.style.opacity=0;},3000);
 
 endGame();
 
@@ -493,14 +501,6 @@ if(heartsMissed>=5&&!gameWon)showGameOver();
 },8000);
 
 }
-
- 
-
-/* ===============================
-
-   GAME CONTROL
-
-=================================*/
 
  
 
@@ -555,14 +555,6 @@ document.getElementById("noBtn").style.display="inline-block";
 },delay*(lines.length+1));
 
 }
-
- 
-
-/* ===============================
-
-   NO BUTTON ESCAPE
-
-=================================*/
 
  
 
