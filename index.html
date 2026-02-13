@@ -56,7 +56,7 @@ canvas#spaceBG, canvas#fireworksCanvas {
 
  
 
-#score{ font-size:18px; margin-top:10px; }
+#score{ font-size:18px; margin-top:10px; opacity:1; transition: opacity 1.5s ease; }
 
 #catchMessage { font-size:18px; margin-top:10px; opacity:1; transition: opacity 1.5s ease; }
 
@@ -68,7 +68,7 @@ button{ padding:12px 20px; font-size:14px; border:none; border-radius:25px; marg
 
 #yesBtn{ background:white; color:hotpink; }
 
-#noBtn{ background:black; color:white; position:absolute; }
+#noBtn{ background:black; color:white; position:absolute; top:40%; left:50%; }
 
  
 
@@ -152,7 +152,7 @@ button{ padding:12px 20px; font-size:14px; border:none; border-radius:25px; marg
 
     <button id="yesBtn" style="display:none;" onclick="yesClicked()">YES 💖</button>
 
-    <button id="noBtn" style="display:none;">NO 😢</button>
+    <button id="noBtn">NO 😢</button>
 
 </div>
 
@@ -164,7 +164,7 @@ button{ padding:12px 20px; font-size:14px; border:none; border-radius:25px; marg
 
 <script>
 
-// 🌌 Space background optimized
+// 🌌 Space background
 
 const canvas = document.getElementById('spaceBG');
 
@@ -178,7 +178,7 @@ canvas.height = window.innerHeight;
 
 const stars=[];
 
-for(let i=0;i<150;i++){ // fewer stars for mobile
+for(let i=0;i<150;i++){
 
     stars.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*1.2, vx:(Math.random()-0.5)/2, vy:(Math.random()-0.5)/2});
 
@@ -324,15 +324,25 @@ function createHeart(){
 
  
 
-        // fade out catch message if score >=14
+        // fade out catch message and score if score >=14
 
         if(score>=14){
 
             const msg = document.getElementById("catchMessage");
 
-            msg.style.opacity = 0; // fade out
+            const sc = document.getElementById("score");
 
-            setTimeout(()=>{ msg.style.display = "none"; }, 1500); // remove after transition
+            msg.style.opacity = 0;
+
+            sc.style.opacity = 0;
+
+            setTimeout(()=>{
+
+                msg.style.display = "none";
+
+                sc.style.display = "none";
+
+            }, 1500);
 
             endGame();
 
@@ -368,7 +378,11 @@ function showGameOver(){
 
     score=0; heartsMissed=0;
 
-    document.getElementById("score").innerText="Hearts: 0";
+    const sc = document.getElementById("score");
+
+    sc.innerText="Hearts: 0";
+
+    sc.style.opacity = 1;
 
     gameStopped=true;
 
@@ -401,10 +415,6 @@ function endGame(){
     setTimeout(()=>{
 
         document.getElementById("yesBtn").style.display="inline-block";
-
-        const noBtn = document.getElementById("noBtn");
-
-        noBtn.style.display="inline-block";
 
     }, delay*(lines.length+1));
 
@@ -440,15 +450,29 @@ function yesClicked(){
 
  
 
-// NO button
+// NO button floats continuously
 
 const noBtn=document.getElementById("noBtn");
 
-noBtn.addEventListener("mouseover",moveButton);
+function moveNoButtonRandomly(){
 
-noBtn.addEventListener("touchstart",moveButton);
+    noBtn.style.left = Math.random()*80 + "vw";
 
-function moveButton(){ noBtn.style.left=Math.random()*80+"vw"; noBtn.style.top=Math.random()*80+"vh"; }
+    noBtn.style.top = Math.random()*80 + "vh";
+
+    setTimeout(moveNoButtonRandomly, 700); // change position every 0.7s
+
+}
+
+moveNoButtonRandomly();
+
+ 
+
+// also move on hover/touch
+
+noBtn.addEventListener("mouseover", moveNoButtonRandomly);
+
+noBtn.addEventListener("touchstart", moveNoButtonRandomly);
 
  
 
