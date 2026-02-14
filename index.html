@@ -404,24 +404,21 @@ function createHeart(){
 
  
 
-    heart.onclick = function() {
+   heart.onclick = function() {
     score++;
     document.getElementById("score").innerText = "Hearts: " + score;
 
-    // Get heart position
     const rect = heart.getBoundingClientRect();
 
-    // Create exploding shards with glitter trail
-    for (let i = 0; i < 15; i++) {
-        // Each shard
+    // Create small heart shards with glitter trail
+    for (let i = 0; i < 12; i++) {  // same small shards
         const shard = document.createElement("div");
         shard.className = "explosion";
-        shard.innerHTML = "💖";
+        shard.innerHTML = "💖"; // small heart shard
         shard.style.left = rect.left + rect.width / 2 + "px";
         shard.style.top = rect.top + rect.height / 2 + "px";
         document.body.appendChild(shard);
 
-        // Animate shard movement
         const vx = (Math.random() - 0.5) * 10;
         const vy = (Math.random() - 0.5) * 10;
         let alpha = 1;
@@ -433,16 +430,16 @@ function createHeart(){
             shard.style.top = top + vy + "px";
             alpha -= 0.03;
             shard.style.opacity = alpha;
-            
-            // Glitter particle behind shard
+
+            // Glitter trail behind shard
             const glitter = document.createElement("div");
             glitter.className = "explosion";
             glitter.innerHTML = "✨";
             glitter.style.left = left + "px";
             glitter.style.top = top + "px";
-            glitter.style.fontSize = (Math.random() * 10 + 5) + "px";
+            glitter.style.fontSize = (Math.random() * 8 + 4) + "px";
             document.body.appendChild(glitter);
-            setTimeout(() => glitter.remove(), 500);
+            setTimeout(() => glitter.remove(), 400);
 
             if (alpha <= 0) {
                 shard.remove();
@@ -648,6 +645,4 @@ function drawFireworks(){
 </body>
 
 </html>
-
-
 
