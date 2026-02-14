@@ -408,48 +408,57 @@ function createHeart(){
     score++;
     document.getElementById("score").innerText = "Hearts: " + score;
 
-    // Heart shatter effect
+    // Get heart position
     const rect = heart.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    const colors = ["#ff69b4", "#ff1493", "#ff85c1"];
 
-    for (let i = 0; i < 15; i++) { // 15 shards
+    // Create exploding shards with glitter trail
+    for (let i = 0; i < 15; i++) {
+        // Each shard
         const shard = document.createElement("div");
-        shard.style.position = "absolute";
-        shard.style.width = "12px";
-        shard.style.height = "12px";
-        shard.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        shard.style.borderRadius = "50%";
-        shard.style.left = centerX + "px";
-        shard.style.top = centerY + "px";
-        shard.style.pointerEvents = "none";
+        shard.className = "explosion";
+        shard.innerHTML = "💖";
+        shard.style.left = rect.left + rect.width / 2 + "px";
+        shard.style.top = rect.top + rect.height / 2 + "px";
         document.body.appendChild(shard);
 
-        const angle = Math.random() * 2 * Math.PI;
-        const speed = 3 + Math.random() * 4;
-        const vx = Math.cos(angle) * speed;
-        const vy = Math.sin(angle) * speed;
-        const gravity = 0.05;
+        // Animate shard movement
+        const vx = (Math.random() - 0.5) * 10;
+        const vy = (Math.random() - 0.5) * 10;
+        let alpha = 1;
 
-        let life = 0;
-        function animateShard() {
-            life++;
-            shard.style.left = parseFloat(shard.style.left) + vx + "px";
-            shard.style.top = parseFloat(shard.style.top) + vy + gravity * life + "px";
-            shard.style.opacity = 1 - life / 40;
-            if (life < 40) requestAnimationFrame(animateShard);
-            else shard.remove();
-        }
-        animateShard();
+        const shardInterval = setInterval(() => {
+            const left = parseFloat(shard.style.left);
+            const top = parseFloat(shard.style.top);
+            shard.style.left = left + vx + "px";
+            shard.style.top = top + vy + "px";
+            alpha -= 0.03;
+            shard.style.opacity = alpha;
+            
+            // Glitter particle behind shard
+            const glitter = document.createElement("div");
+            glitter.className = "explosion";
+            glitter.innerHTML = "✨";
+            glitter.style.left = left + "px";
+            glitter.style.top = top + "px";
+            glitter.style.fontSize = (Math.random() * 10 + 5) + "px";
+            document.body.appendChild(glitter);
+            setTimeout(() => glitter.remove(), 500);
+
+            if (alpha <= 0) {
+                shard.remove();
+                clearInterval(shardInterval);
+            }
+        }, 30);
     }
 
+    // Check win
     if (score >= 14 && !gameWon) {
         const msg = document.getElementById("catchMessage");
         const sc = document.getElementById("score");
         msg.style.opacity = 0; sc.style.opacity = 0;
         setTimeout(() => {
             msg.style.display = "none"; sc.style.display = "none";
+
             const winBox = document.getElementById("winBox");
             winBox.style.display = "block";
             setTimeout(() => { winBox.style.opacity = 1; }, 50);
@@ -464,6 +473,7 @@ function createHeart(){
 
     heart.remove();
 };
+
 
 
 
@@ -638,5 +648,6 @@ function drawFireworks(){
 </body>
 
 </html>
+
 
 
