@@ -528,6 +528,33 @@ function showGameOver(){
     gameStopped=true;
 
     document.getElementById("gameOver").style.display="block";
+// Shattered Heart Rain
+for(let i=0; i<30; i++){ // 30 falling shards
+    const rainShard = document.createElement("div");
+    rainShard.style.position = "absolute";
+    rainShard.style.width = "10px";
+    rainShard.style.height = "10px";
+    rainShard.style.backgroundColor = ["#ff69b4","#ff1493","#ff85c1"][Math.floor(Math.random()*3)];
+    rainShard.style.borderRadius = "50%";
+    rainShard.style.left = Math.random() * window.innerWidth + "px";
+    rainShard.style.top = -20 + "px"; // start above screen
+    rainShard.style.pointerEvents = "none";
+    document.body.appendChild(rainShard);
+
+    const speedY = 2 + Math.random() * 3;
+    const swayX = (Math.random()-0.5) * 2;
+
+    let life = 0;
+    function animateRain() {
+        life++;
+        rainShard.style.left = parseFloat(rainShard.style.left) + swayX + "px";
+        rainShard.style.top = parseFloat(rainShard.style.top) + speedY + "px";
+        rainShard.style.opacity = 1 - life / 100;
+        if(life < 100) requestAnimationFrame(animateRain);
+        else rainShard.remove();
+    }
+    animateRain();
+}
 
 }
 
@@ -666,6 +693,7 @@ function drawFireworks(){
 </body>
 
 </html>
+
 
 
 
