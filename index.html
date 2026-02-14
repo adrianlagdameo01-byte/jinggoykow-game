@@ -404,57 +404,44 @@ function createHeart(){
 
  
 
-    heart.onclick=function(){
+    heart.onclick = function() {
+    score++;
+    document.getElementById("score").innerText = "Hearts: " + score;
 
-        score++;
+    // Create explosion effect at heart position
+    const rect = heart.getBoundingClientRect();
+    for (let i = 0; i < 6; i++) { // 6 mini hearts per click
+        const boom = document.createElement("div");
+        boom.className = "explosion";
+        boom.innerHTML = "💖";
+        boom.style.left = rect.left + "px";
+        boom.style.top = rect.top + "px";
+        document.body.appendChild(boom);
+        setTimeout(() => boom.remove(), 1000);
+    }
 
-        document.getElementById("score").innerText="Hearts: "+score;
+    if (score >= 14 && !gameWon) {
+        const msg = document.getElementById("catchMessage");
+        const sc = document.getElementById("score");
+        msg.style.opacity = 0; sc.style.opacity = 0;
+        setTimeout(() => {
+            msg.style.display = "none"; sc.style.display = "none";
+            // show "Great Job your Highness!" for 3 seconds
+            const winBox = document.getElementById("winBox");
+            winBox.style.display = "block";
+            setTimeout(() => { winBox.style.opacity = 1; }, 50);
+            setTimeout(() => {
+                winBox.style.opacity = 0;
+                setTimeout(() => { winBox.style.display = "none"; }, 500);
+            }, 3000);
+        }, 1500);
 
- 
+        endGame();
+    }
 
-        if(score>=14 && !gameWon){
+    heart.remove();
+};
 
-            const msg = document.getElementById("catchMessage");
-
-            const sc = document.getElementById("score");
-
-            msg.style.opacity = 0; sc.style.opacity = 0;
-
-            setTimeout(()=>{
-
-                msg.style.display = "none"; sc.style.display = "none";
-
- 
-
-                // show "Great Job your Highness!" for 3 seconds
-
-                const winBox = document.getElementById("winBox");
-
-                winBox.style.display = "block";
-
-                setTimeout(()=>{ winBox.style.opacity = 1; },50);
-
-                setTimeout(()=>{
-
-                    winBox.style.opacity = 0;
-
-                    setTimeout(()=>{ winBox.style.display="none"; },500);
-
-                },3000);
-
-            },1500);
-
- 
-
-            endGame();
-
-        }
-
- 
-
-        heart.remove();
-
-    };
 
  
 
@@ -627,3 +614,4 @@ function drawFireworks(){
 </body>
 
 </html>
+
