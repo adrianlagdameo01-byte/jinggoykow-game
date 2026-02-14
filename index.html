@@ -408,16 +408,40 @@ function createHeart(){
     score++;
     document.getElementById("score").innerText = "Hearts: " + score;
 
-    // Create explosion effect at heart position
+    // Heart shatter effect
     const rect = heart.getBoundingClientRect();
-    for (let i = 0; i < 6; i++) { // 6 mini hearts per click
-        const boom = document.createElement("div");
-        boom.className = "explosion";
-        boom.innerHTML = "💖";
-        boom.style.left = rect.left + "px";
-        boom.style.top = rect.top + "px";
-        document.body.appendChild(boom);
-        setTimeout(() => boom.remove(), 1000);
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const colors = ["#ff69b4", "#ff1493", "#ff85c1"];
+
+    for (let i = 0; i < 15; i++) { // 15 shards
+        const shard = document.createElement("div");
+        shard.style.position = "absolute";
+        shard.style.width = "12px";
+        shard.style.height = "12px";
+        shard.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        shard.style.borderRadius = "50%";
+        shard.style.left = centerX + "px";
+        shard.style.top = centerY + "px";
+        shard.style.pointerEvents = "none";
+        document.body.appendChild(shard);
+
+        const angle = Math.random() * 2 * Math.PI;
+        const speed = 3 + Math.random() * 4;
+        const vx = Math.cos(angle) * speed;
+        const vy = Math.sin(angle) * speed;
+        const gravity = 0.05;
+
+        let life = 0;
+        function animateShard() {
+            life++;
+            shard.style.left = parseFloat(shard.style.left) + vx + "px";
+            shard.style.top = parseFloat(shard.style.top) + vy + gravity * life + "px";
+            shard.style.opacity = 1 - life / 40;
+            if (life < 40) requestAnimationFrame(animateShard);
+            else shard.remove();
+        }
+        animateShard();
     }
 
     if (score >= 14 && !gameWon) {
@@ -426,7 +450,6 @@ function createHeart(){
         msg.style.opacity = 0; sc.style.opacity = 0;
         setTimeout(() => {
             msg.style.display = "none"; sc.style.display = "none";
-            // show "Great Job your Highness!" for 3 seconds
             const winBox = document.getElementById("winBox");
             winBox.style.display = "block";
             setTimeout(() => { winBox.style.opacity = 1; }, 50);
@@ -441,6 +464,7 @@ function createHeart(){
 
     heart.remove();
 };
+
 
 
  
@@ -614,4 +638,5 @@ function drawFireworks(){
 </body>
 
 </html>
+
 
